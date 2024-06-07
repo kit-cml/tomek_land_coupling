@@ -95,62 +95,64 @@ int get_drug_data_from_file(const char *file_name, drug_t &vec)
   return sample_size;
 }
 
-struct hill_data {
-    double hill[14];  // Fixed size array for 14 parameters
-};
+typedef struct herg_row { double herg[6]; } herg_row;
+// rewrite it as vector
+typedef std::vector< herg_row > herg_data;
 
-struct herg_data {
-    double herg[6];   // Fixed size array for 6 parameters
-};
+// herg_data load_herg(const char* filename) {
+//     std::ifstream input_file(filename);
+//     if (!input_file.is_open()) {
+//         std::cerr << "Unable to open file: " << filename << std::endl;
+//         std::exit(1); // Exit if file cannot be opened
+//     }
+//     herg_data data{};
+//     std::string line, cell;
+//     std::getline(input_file, line);
+//     if (std::getline(input_file, line)) {
+//         std::istringstream lineStream(line);
+//         int index = 0;
+//         while (getline(lineStream, cell, ',') && index < 6) {
+//             try {
+//                 data.herg[index++] = std::stod(cell);
+//             } catch (std::invalid_argument&) {
+//                 data.herg[index++] = 0.0; // Treat invalid data as 0
+//             }
+//         }
+//     }
+//     input_file.close();
+//     return data;
+// }
 
+int get_herg_data_from_file(const char *file_name, herg_data &vec)
+{
+  FILE *fp_drugs;
+  char *token, buffer[255];
+  herg_row temp_array;
+  short idx;
+  int sample_size=0;
 
-void load_hill(const char* filename) {
-    std::ifstream input_file(filename);
-    if (!input_file.is_open()) {
-        std::cerr << "Unable to open file: " << filename << std::endl;
-        std::exit(1); // Exit if file cannot be opened
-    }
-    hill_data data{};
-    std::string line, cell;
-    std::getline(input_file, line);
-    if (std::getline(input_file, line)) {
-        std::istringstream lineStream(line);
-        int index = 0;
-        while (getline(lineStream, cell, ',') && index < 14) {
-            try {
-                data.hill[index++] = std::stod(cell);
-            } catch (std::invalid_argument&) {
-                data.hill[index++] = 0.0; // Treat invalid data as 0
-            }
-        }
-    }
-    input_file.close();
-    // return data;
+  if( (fp_drugs = fopen(file_name, "r")) == NULL){
+    printf("Cannot open file %s\n", file_name);
+    return 1;
+  }
+
+  fgets(buffer, sizeof(buffer), fp_drugs); // skip header
+  while( fgets(buffer, sizeof(buffer), fp_drugs) != NULL )
+  { // begin line reading
+    token = strtok( buffer, "," );
+    idx = 0;
+    while( token != NULL )
+    { // begin data tokenizing
+      temp_array.herg[idx++] = strtod(token, NULL);
+      token = strtok(NULL, ",");
+    } // end data tokenizing
+    vec.push_back(temp_array);
+    sample_size++;
+  } // end line reading
+
+  return sample_size;
 }
 
-void load_herg(const char* filename) {
-    std::ifstream input_file(filename);
-    if (!input_file.is_open()) {
-        std::cerr << "Unable to open file: " << filename << std::endl;
-        std::exit(1); // Exit if file cannot be opened
-    }
-    herg_data data{};
-    std::string line, cell;
-    std::getline(input_file, line);
-    if (std::getline(input_file, line)) {
-        std::istringstream lineStream(line);
-        int index = 0;
-        while (getline(lineStream, cell, ',') && index < 6) {
-            try {
-                data.herg[index++] = std::stod(cell);
-            } catch (std::invalid_argument&) {
-                data.herg[index++] = 0.0; // Treat invalid data as 0
-            }
-        }
-    }
-    input_file.close();
-    // return data;
-}
 
 int main(int argc, char **argv)
 {
@@ -206,13 +208,13 @@ int main(int argc, char **argv)
   char drugname[100] = "testing";
   char ic50_address[100] = "./drugs/";
   char result_address[100]= "./result/";
+  herg_data herg_input;
 
   strcat(ic50_address,drugname);
   strcat(ic50_address, ".csv");
   strcat(result_address,drugname);
   sample_size = get_drug_data_from_file(ic50_address,IC50);
-  hill_data hill = load_hill(argv[2]);
-  herg_data herg = load_herg(argv[3]);
+  get_herg_data_from_file ("./herg_data/bepridil.csv",herg_input);
   double y[7] = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0};
   int sample_idx;
 
@@ -355,7 +357,7 @@ int main(int argc, char **argv)
         if(tcurr >= tmax-bcl){
         printer++;
           if(printer == 333){
-              fprintf(fp_vm, "%lf,%lf\n", tcurr, chem_cell->STATES[v]);
+              fprintf(fp_vm, "%lf,%lf\n", tcurr, chem_cell->STATES[V]);
               fprintf(fp_conc,"%lf,%lf,%lf\n", tcurr,chem_cell->STATES[nai], chem_cell->STATES[cai] );
               fprintf(fp_timestep, "%lf,%lf\n", tcurr,dt);
               fprintf(fp_tension, "%lf,%lf\n", tcurr,contr_cell->ALGEBRAIC[land_T]);

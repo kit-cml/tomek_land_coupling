@@ -521,7 +521,7 @@ ohara_rudy_cipa_v1_2017::ohara_rudy_cipa_v1_2017()
 {
 algebraic_size = 200;
 constants_size = 206;
-states_size = 49;
+states_size = 50;
 // ALGEBRAIC = new double[algebraic_size];
 // CONSTANTS = new double[constants_size];
 // RATES = new double[states_size];
@@ -819,8 +819,12 @@ CONSTANTS[a4] = (( CONSTANTS[k4p]*CONSTANTS[MgATP])/CONSTANTS[Kmgatp])/(1.00000+
 CONSTANTS[Pnak] = (CONSTANTS[celltype]==1.00000 ?  CONSTANTS[Pnak_b]*0.900000 : CONSTANTS[celltype]==2.00000 ?  CONSTANTS[Pnak_b]*0.700000 : CONSTANTS[Pnak_b]);
 }
 
+void ohara_rudy_cipa_v1_2017::computeRates()
+{
 
-void ohara_rudy_cipa_v1_2017::computeRates( double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC )
+}
+
+void ohara_rudy_cipa_v1_2017::computeRates( double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double land_trpn )
 {
 ALGEBRAIC[hLss] = 1.00000/(1.00000+exp((STATES[V]+87.6100)/7.48800));
 ALGEBRAIC[hLssp] = 1.00000/(1.00000+exp((STATES[V]+93.8100)/7.48800));
@@ -1070,7 +1074,9 @@ RATES[nai] = ( - (ALGEBRAIC[INa]+ALGEBRAIC[INaL]+ 3.00000*ALGEBRAIC[INaCa_i]+ 3.
 RATES[nass] = ( - (ALGEBRAIC[ICaNa]+ 3.00000*ALGEBRAIC[INaCa_ss])*CONSTANTS[cm]*CONSTANTS[Acap])/( CONSTANTS[F]*CONSTANTS[vss]) - ALGEBRAIC[JdiffNa];
 RATES[V] = - (ALGEBRAIC[INa]+ALGEBRAIC[INaL]+ALGEBRAIC[Ito]+ALGEBRAIC[ICaL]+ALGEBRAIC[ICaNa]+ALGEBRAIC[ICaK]+ALGEBRAIC[IKr]+ALGEBRAIC[IKs]+ALGEBRAIC[IK1]+ALGEBRAIC[INaCa_i]+ALGEBRAIC[INaCa_ss]+ALGEBRAIC[INaK]+ALGEBRAIC[INab]+ALGEBRAIC[IKb]+ALGEBRAIC[IpCa]+ALGEBRAIC[ICab]+ALGEBRAIC[Istim]);
 RATES[cass] =  ALGEBRAIC[Bcass]*((( - (ALGEBRAIC[ICaL] -  2.00000*ALGEBRAIC[INaCa_ss])*CONSTANTS[cm]*CONSTANTS[Acap])/( 2.00000*CONSTANTS[F]*CONSTANTS[vss])+( ALGEBRAIC[Jrel]*CONSTANTS[vjsr])/CONSTANTS[vss]) - ALGEBRAIC[Jdiff]);
-RATES[cai] =  ALGEBRAIC[Bcai]*((( - ((ALGEBRAIC[IpCa]+ALGEBRAIC[ICab]) -  2.00000*ALGEBRAIC[INaCa_i])*CONSTANTS[cm]*CONSTANTS[Acap])/( 2.00000*CONSTANTS[F]*CONSTANTS[vmyo]) - ( ALGEBRAIC[Jup]*CONSTANTS[vnsr])/CONSTANTS[vmyo])+( ALGEBRAIC[Jdiff]*CONSTANTS[vss])/CONSTANTS[vmyo]);
+// new for coupling
+RATES[ca_trpn] = CONSTANTS[trpnmax] * land_trpn;
+RATES[cai] =  ALGEBRAIC[Bcai]*((( - ((ALGEBRAIC[IpCa]+ALGEBRAIC[ICab]) -  2.00000*ALGEBRAIC[INaCa_i])*CONSTANTS[cm]*CONSTANTS[Acap])/( 2.00000*CONSTANTS[F]*CONSTANTS[vmyo]) - ( ALGEBRAIC[Jup]*CONSTANTS[vnsr])/CONSTANTS[vmyo])+( ALGEBRAIC[Jdiff]*CONSTANTS[vss])/CONSTANTS[vmyo] - RATES[ca_trpn]); //modified
 RATES[cansr] = ALGEBRAIC[Jup] - ( ALGEBRAIC[Jtr]*CONSTANTS[vjsr])/CONSTANTS[vnsr];
 RATES[cajsr] =  ALGEBRAIC[Bcajsr]*(ALGEBRAIC[Jtr] - ALGEBRAIC[Jrel]);
 }
@@ -1249,6 +1255,8 @@ void ohara_rudy_cipa_v1_2017::solveAnalytical(int forward_euler_only, double dt,
       STATES[cass] = STATES[cass] + RATES[cass] * dt;
       STATES[cansr] = STATES[cansr] + RATES[cansr] * dt;
       STATES[cajsr] = STATES[cajsr] + RATES[cajsr] * dt;
+      // new
+      STATES[ca_trpn] = STATES[ca_trpn] + RATES[ca_trpn] * dt;
   }
 }
 
@@ -1298,32 +1306,32 @@ void ohara_rudy_cipa_v1_2017::gaussElimination(double *A, double *b, double *x, 
     }
 }
 
-void ohara_rudy_cipa_v1_2017::solveRK4(double TIME, double dt){
-	unsigned short idx;
-	double k1[49],k2[49],k3[49],k4[49];
-	double states_temp[49];
+// void ohara_rudy_cipa_v1_2017::solveRK4(double TIME, double dt){
+// 	unsigned short idx;
+// 	double k1[49],k2[49],k3[49],k4[49];
+// 	double states_temp[49];
 
-	computeRates(TIME, CONSTANTS, RATES, STATES, ALGEBRAIC );
-	for(idx = 0; idx < states_size; idx++){
-		k1[idx] = dt * RATES[idx];
-		states_temp[idx] = STATES[idx] + k1[idx]*0.5;
-	}
-	computeRates(TIME+(dt*0.5), CONSTANTS, RATES, states_temp, ALGEBRAIC );
-	for(idx = 0; idx < states_size; idx++){
-		k2[idx] = dt * RATES[idx];
-		states_temp[idx] = STATES[idx] + k2[idx]*0.5;
-	}
-	computeRates(TIME+(dt*0.5), CONSTANTS, RATES, states_temp, ALGEBRAIC );
-	for(idx = 0; idx < states_size; idx++){
-		k3[idx] = dt * RATES[idx];
-		states_temp[idx] = STATES[idx] + k3[idx];
-	}
-	computeRates(TIME+dt, CONSTANTS, RATES, states_temp, ALGEBRAIC );
-	for(idx = 0; idx < states_size; idx++){
-		k4[idx] = dt * RATES[idx];
-		STATES[idx] += (k1[idx]/6) + (k2[idx]/3) + (k3[idx]/3) + (k4[idx]/6) ;
-	}
-}
+// 	computeRates(TIME, CONSTANTS, RATES, STATES, ALGEBRAIC );
+// 	for(idx = 0; idx < states_size; idx++){
+// 		k1[idx] = dt * RATES[idx];
+// 		states_temp[idx] = STATES[idx] + k1[idx]*0.5;
+// 	}
+// 	computeRates(TIME+(dt*0.5), CONSTANTS, RATES, states_temp, ALGEBRAIC );
+// 	for(idx = 0; idx < states_size; idx++){
+// 		k2[idx] = dt * RATES[idx];
+// 		states_temp[idx] = STATES[idx] + k2[idx]*0.5;
+// 	}
+// 	computeRates(TIME+(dt*0.5), CONSTANTS, RATES, states_temp, ALGEBRAIC );
+// 	for(idx = 0; idx < states_size; idx++){
+// 		k3[idx] = dt * RATES[idx];
+// 		states_temp[idx] = STATES[idx] + k3[idx];
+// 	}
+// 	computeRates(TIME+dt, CONSTANTS, RATES, states_temp, ALGEBRAIC );
+// 	for(idx = 0; idx < states_size; idx++){
+// 		k4[idx] = dt * RATES[idx];
+// 		STATES[idx] += (k1[idx]/6) + (k2[idx]/3) + (k3[idx]/3) + (k4[idx]/6) ;
+// 	}
+// }
 
 double ohara_rudy_cipa_v1_2017::set_time_step(double TIME,
                                               double time_point,

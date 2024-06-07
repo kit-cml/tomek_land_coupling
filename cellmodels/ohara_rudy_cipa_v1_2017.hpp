@@ -14,7 +14,8 @@ public:
   void initConsts ();
   void initConsts(double type);
   void initConsts(double type, double conc, const double *hill, const double *herg );
-  void computeRates( double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC );
+  void computeRates();
+  void computeRates( double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double land_trpn );
   void solveAnalytical( int forward_euler_only, double dt, double *CONSTANTS, double *RATES, double* STATES, double* ALGEBRAIC );
   double tryDt( double dt,
                double TIME,
@@ -24,7 +25,7 @@ public:
                double* ALGEBRAIC );
   void gaussElimination(double *A, double *b, double *x, int N);
 //  void gaussSeidel(double **a, double *b, double *x, int n, int maxIterations, double tolerance);
-  void solveRK4(double TIME,double dt);
+  // void solveRK4(double TIME,double dt);
   double set_time_step(double TIME,
                        double time_point,
                        double min_time_step,
