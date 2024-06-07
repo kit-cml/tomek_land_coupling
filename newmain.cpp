@@ -1,4 +1,4 @@
-#include "cellmodels/Ohara_Rudy_2011.hpp"
+#include "cellmodels/ohara_rudy_cipa_v1_2017.hpp"
 #include "cellmodels/Land_2016.hpp"
 
 #include <algorithm>
@@ -95,6 +95,63 @@ int get_drug_data_from_file(const char *file_name, drug_t &vec)
   return sample_size;
 }
 
+struct hill_data {
+    double hill[14];  // Fixed size array for 14 parameters
+};
+
+struct herg_data {
+    double herg[6];   // Fixed size array for 6 parameters
+};
+
+
+void load_hill(const char* filename) {
+    std::ifstream input_file(filename);
+    if (!input_file.is_open()) {
+        std::cerr << "Unable to open file: " << filename << std::endl;
+        std::exit(1); // Exit if file cannot be opened
+    }
+    hill_data data{};
+    std::string line, cell;
+    std::getline(input_file, line);
+    if (std::getline(input_file, line)) {
+        std::istringstream lineStream(line);
+        int index = 0;
+        while (getline(lineStream, cell, ',') && index < 14) {
+            try {
+                data.hill[index++] = std::stod(cell);
+            } catch (std::invalid_argument&) {
+                data.hill[index++] = 0.0; // Treat invalid data as 0
+            }
+        }
+    }
+    input_file.close();
+    // return data;
+}
+
+void load_herg(const char* filename) {
+    std::ifstream input_file(filename);
+    if (!input_file.is_open()) {
+        std::cerr << "Unable to open file: " << filename << std::endl;
+        std::exit(1); // Exit if file cannot be opened
+    }
+    herg_data data{};
+    std::string line, cell;
+    std::getline(input_file, line);
+    if (std::getline(input_file, line)) {
+        std::istringstream lineStream(line);
+        int index = 0;
+        while (getline(lineStream, cell, ',') && index < 6) {
+            try {
+                data.herg[index++] = std::stod(cell);
+            } catch (std::invalid_argument&) {
+                data.herg[index++] = 0.0; // Treat invalid data as 0
+            }
+        }
+    }
+    input_file.close();
+    // return data;
+}
+
 int main(int argc, char **argv)
 {
   // CVode variables
@@ -154,6 +211,8 @@ int main(int argc, char **argv)
   strcat(ic50_address, ".csv");
   strcat(result_address,drugname);
   sample_size = get_drug_data_from_file(ic50_address,IC50);
+  hill_data hill = load_hill(argv[2]);
+  herg_data herg = load_herg(argv[3]);
   double y[7] = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0};
   int sample_idx;
 
@@ -199,7 +258,7 @@ int main(int argc, char **argv)
       strcpy(vmcheck,filename);strcpy(icurr,filename); strcpy(concent, filename); strcpy(timestep,filename); strcpy(tension,filename);
       strcat(vmcheck, "vmcheck.csv");strcat(icurr, "icurr.csv");strcat(concent, "conc.csv");strcat(timestep, "timestep.csv");strcat(tension, "tension.csv");
       contr_cell = new Land_2016();
-      chem_cell = new Ohara_Rudy_2011();
+      chem_cell = new ohara_rudy_cipa_v1_2017();
       // printf("Initialising\n");
       chem_cell->initConsts(0., bcl, conc, IC50[sample_idx].data, true);
       contr_cell->initConsts(false, false, y);
