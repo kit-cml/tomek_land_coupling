@@ -1,8 +1,8 @@
 #ifndef OHARA_RUDY_CIPA_V1_2017_HPP
 #define OHARA_RUDY_CIPA_V1_2017_HPP
 
-#include "Cellmodel.h"
-#include "enum_ohara_rudy_cipa_v1_2017.hpp"
+#include "cellmodel.hpp"
+#include "../enums/enum_ohara_rudy_cipa_v1_2017.hpp"
 
 #define EULER
 

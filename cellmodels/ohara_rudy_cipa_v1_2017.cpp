@@ -522,10 +522,10 @@ ohara_rudy_cipa_v1_2017::ohara_rudy_cipa_v1_2017()
 algebraic_size = 200;
 constants_size = 206;
 states_size = 49;
-ALGEBRAIC = new double[algebraic_size];
-CONSTANTS = new double[constants_size];
-RATES = new double[states_size];
-STATES = new double[states_size];
+// ALGEBRAIC = new double[algebraic_size];
+// CONSTANTS = new double[constants_size];
+// RATES = new double[states_size];
+// STATES = new double[states_size];
 }
 
 ohara_rudy_cipa_v1_2017::~ohara_rudy_cipa_v1_2017()

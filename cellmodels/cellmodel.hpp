@@ -7,7 +7,9 @@ class Cellmodel
 protected:
 	Cellmodel(){}
 public:
-	 unsigned short algebraic_size;
+  bool isEctopic;
+  bool isS1;
+	unsigned short algebraic_size;
   unsigned short constants_size;
   unsigned short states_size;
   unsigned short gates_size;
@@ -27,7 +29,9 @@ public:
 
   virtual void initConsts() = 0;
   virtual void initConsts(double type){}
+  virtual void initConsts (double type, bool is_dutta){}
   virtual void initConsts(double type, double conc, double *hill){}
+  virtual void initConsts (double type, double conc, const double *hill, const double *herg){}
   virtual void initConsts(double type, double conc, double *hill, bool is_dutta){}
   virtual void initConsts(double type, double bcl, double conc, double *hill, bool is_dutta){}
   virtual void initConsts(double type, double conc, double *hill, double* boot){}
@@ -38,11 +42,16 @@ public:
   virtual void computeRates(double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double land_trpn){}
   virtual void computeRates(double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *y){}
 
+  virtual double set_time_step (double TIME, double time_point, double min_time_step, double max_time_step, double min_dV, double max_dV,
+                                double* CONSTANTS, double* RATES,double* STATES, double* ALGEBRAIC) {};
+
   // virtual void solveAnalytical() = 0;
   virtual void solveAnalytical(double dt) {}
   virtual void solveAnalytical(double dt, double Ca_TRPN) {}
+  virtual void solveAnalytical( int forward_euler_only, double dt, double *CONSTANTS, double *RATES, double* STATES, double* ALGEBRAIC ) {};
 
   virtual void solveEuler( double dt, double t, double Cai_input ){}
+  virtual void gaussElimination(double *A, double *b, double *x, int N){};
   virtual void solveRK4(double TIME,double dt) {}
 };
 
