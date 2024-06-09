@@ -538,19 +538,20 @@ delete []STATES;
 
 void ohara_rudy_cipa_v1_2017::initConsts()
 {
-  ___initConsts(0.);
+  ___initConsts(0.,1000.0);
   std::cout << "Check" << std::endl;
 }
 
 void ohara_rudy_cipa_v1_2017::initConsts(double type)
 {
-  ___initConsts(type);
+  ___initConsts(type, 1000.0);
 }
 
-void ohara_rudy_cipa_v1_2017::initConsts(double type, double conc, const double *hill, const double *herg)
+// void initConsts(double type, double bcl, double conc, double *ic50, bool is_dutta );
+void ohara_rudy_cipa_v1_2017::initConsts(double type, double bcl, double conc, double *hill, double *herg)
 {
   std::cout << "Check drug" << std::endl;
-  ___initConsts(type);
+  ___initConsts(type,bcl);
   std::cout << "Celltype: " << CONSTANTS[celltype] << std::endl;
   std::cout << "Control Hill inhibition " << CONSTANTS[PCa] << " " << CONSTANTS[GK1] << " " << CONSTANTS[GKs] << " " << CONSTANTS[GNaL] << " " << CONSTANTS[GKr] << std::endl;
   ___applyDrugEffect(conc, hill);
@@ -560,7 +561,7 @@ void ohara_rudy_cipa_v1_2017::initConsts(double type, double conc, const double 
   std::cout << "After drug " << CONSTANTS[Kmax] << " " << CONSTANTS[Ku] << " " << CONSTANTS[n] << " " << CONSTANTS[halfmax] << " " << CONSTANTS[Vhalf] << " " << CONSTANTS[cnc] << " " << std::endl;
 }
 
-void ohara_rudy_cipa_v1_2017::___initConsts(double type)
+void ohara_rudy_cipa_v1_2017::___initConsts(double type, double bcl)
 {
 CONSTANTS[celltype] = type;
 CONSTANTS[nao] = 140;
@@ -578,7 +579,7 @@ STATES[V] = -88.00190465;
 CONSTANTS[stim_start] = 10;
 CONSTANTS[stim_end] = 100000000000000000;
 CONSTANTS[amp] = -80;
-CONSTANTS[BCL] = 1000;
+CONSTANTS[BCL] = bcl;
 CONSTANTS[duration] = 0.5;
 CONSTANTS[KmCaMK] = 0.15;
 CONSTANTS[aCaMK] = 0.05;

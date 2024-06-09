@@ -164,7 +164,7 @@ int main(int argc, char **argv)
   // drug initialisation
   drug_t IC50;
   bool is_cai_scaling = true;
-  double conc = 38.0;
+  double conc = 38.0*0;
   double bcl = 1000.;
 
   // cell object pointer
@@ -214,7 +214,7 @@ int main(int argc, char **argv)
   strcat(ic50_address, ".csv");
   strcat(result_address,drugname);
   sample_size = get_drug_data_from_file(ic50_address,IC50);
-  get_herg_data_from_file ("./herg_data/bepridil.csv",herg_input);
+  int herg_size = get_herg_data_from_file ("./herg_data/bepridil.csv",herg_input);
   double y[7] = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0};
   int sample_idx;
 
@@ -262,7 +262,7 @@ int main(int argc, char **argv)
       contr_cell = new Land_2016();
       chem_cell = new ohara_rudy_cipa_v1_2017();
       // printf("Initialising\n");
-      chem_cell->initConsts(0., bcl, conc, IC50[sample_idx].data, true);
+      chem_cell->initConsts(0., bcl, conc, IC50[sample_idx].data, herg_input[sample_idx].herg);
       contr_cell->initConsts(false, false, y);
      
       snprintf(buffer, sizeof(buffer), vmcheck);
