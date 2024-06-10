@@ -164,7 +164,7 @@ int main(int argc, char **argv)
   // drug initialisation
   drug_t IC50;
   bool is_cai_scaling = true;
-  double conc = 33.0;
+  double conc = 0.0;
   double bcl = 1000.;
 
   // cell object pointer
@@ -280,7 +280,7 @@ int main(int argc, char **argv)
       snprintf(buffer, sizeof(buffer), tension);
       fp_tension = fopen(buffer, "w");
 
-      pace_max = 1000;
+      pace_max = 50;
      
       tcurr = 0.0;
       dt = 0.001;
@@ -298,6 +298,7 @@ int main(int argc, char **argv)
       {
         // cai_index = tcurr;
           // compute ODE at tcurr
+        printf("ca_trpn now: %lf\n",contr_cell->RATES[ca_trpn]);
         chem_cell->computeRates(tcurr,
                     chem_cell->CONSTANTS,
                     chem_cell->RATES,
@@ -338,7 +339,15 @@ int main(int argc, char **argv)
           // contr_cell->solveEuler(dt, tcurr,Cai_input[cai_index]);
         // }
         // else{
-          chem_cell->solveAnalytical(dt);
+          // forward euler only
+          chem_cell->solveAnalytical(0, 
+                    dt,  
+                    chem_cell->CONSTANTS,
+                    chem_cell->RATES,
+                    chem_cell->STATES,
+                    chem_cell->ALGEBRAIC);
+
+          // contraction's solve analytical:
           if (is_cai_scaling == true){
             contr_cell->solveEuler(dt, tcurr, (chem_cell->STATES[cai]*1000.));
           }
