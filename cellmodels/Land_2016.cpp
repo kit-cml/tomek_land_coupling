@@ -184,6 +184,7 @@ RATES[XW] = ALGEBRAIC[xb_uw] - ALGEBRAIC[xb_wu] - ALGEBRAIC[xb_ws] - ALGEBRAIC[x
 // dydt(3)  = koff * ( (Cai/ca50)^TRPN_n * (1-TRPN) - TRPN);
 ALGEBRAIC[ca50] = ALGEBRAIC[ca50] + CONSTANTS[beta_1] * fmin(0.2, CONSTANTS[lambda] - 1);
 RATES[TRPN] = CONSTANTS[koff] * (pow((CONSTANTS[Cai] / ALGEBRAIC[ca50]), CONSTANTS[TRPN_n]) * (1 - STATES[TRPN]) - STATES[TRPN]);
+////// Cai constants will trigger NaN, followed by states TRPN
 
 // XSSS = dr * 0.5;
 // XWSS = (1-dr) * wfrac * 0.5;

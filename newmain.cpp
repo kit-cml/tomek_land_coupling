@@ -280,7 +280,7 @@ int main(int argc, char **argv)
       snprintf(buffer, sizeof(buffer), tension);
       fp_tension = fopen(buffer, "w");
 
-      pace_max = 50;
+      pace_max = 5;
      
       tcurr = 0.0;
       dt = 0.001;
@@ -298,7 +298,7 @@ int main(int argc, char **argv)
       {
         // cai_index = tcurr;
           // compute ODE at tcurr
-        printf("ca_trpn now: %lf\n",contr_cell->RATES[ca_trpn]);
+        printf("%lf * (pow( (%lf / %lf) , %lf) * (%lf) - %lf)\n",contr_cell->CONSTANTS[koff],contr_cell->CONSTANTS[Cai], contr_cell->ALGEBRAIC[ca50], contr_cell->CONSTANTS[TRPN_n], (1 - contr_cell->STATES[TRPN]), contr_cell->STATES[TRPN]);
         chem_cell->computeRates(tcurr,
                     chem_cell->CONSTANTS,
                     chem_cell->RATES,
@@ -341,7 +341,7 @@ int main(int argc, char **argv)
         // else{
           // forward euler only
           chem_cell->solveAnalytical(0, 
-                    dt,  
+                    dt, 
                     chem_cell->CONSTANTS,
                     chem_cell->RATES,
                     chem_cell->STATES,
@@ -349,10 +349,13 @@ int main(int argc, char **argv)
 
           // contraction's solve analytical:
           if (is_cai_scaling == true){
+            printf("cai: %lf\n",chem_cell->STATES[cai]);
             contr_cell->solveEuler(dt, tcurr, (chem_cell->STATES[cai]*1000.));
           }
           else{
+            printf("cai: %lf\n",chem_cell->STATES[cai]);
             contr_cell->solveEuler(dt, tcurr, (chem_cell->STATES[cai]));
+            // the states cai from chem might be -nan at 2nd loop
           }
         // }
         pacer++;
