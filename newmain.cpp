@@ -261,10 +261,10 @@ int main(int argc, char **argv)
       strcat(vmcheck, "vmcheck.csv");strcat(icurr, "icurr.csv");strcat(concent, "conc.csv");strcat(timestep, "timestep.csv");strcat(tension, "tension.csv");
       contr_cell = new Land_2016();
       chem_cell = new ohara_rudy_cipa_v1_2017();
-      // printf("Initialising\n");
+      
       chem_cell->initConsts(0., bcl, conc, IC50[sample_idx].data, herg_input[sample_idx].herg);
       contr_cell->initConsts(false, false, y);
-     
+      printf("Initialised\n");
       snprintf(buffer, sizeof(buffer), vmcheck);
       fp_vm = fopen(buffer, "w");
 
@@ -298,7 +298,7 @@ int main(int argc, char **argv)
       {
         // cai_index = tcurr;
           // compute ODE at tcurr
-        printf("%lf * (pow( (%lf / %lf) , %lf) * (%lf) - %lf)\n",contr_cell->CONSTANTS[koff],contr_cell->CONSTANTS[Cai], contr_cell->ALGEBRAIC[ca50], contr_cell->CONSTANTS[TRPN_n], (1 - contr_cell->STATES[TRPN]), contr_cell->STATES[TRPN]);
+        // printf("%lf * (pow( (%lf / %lf) , %lf) * (%lf) - %lf)\n",contr_cell->CONSTANTS[koff],contr_cell->CONSTANTS[Cai], contr_cell->ALGEBRAIC[ca50], contr_cell->CONSTANTS[TRPN_n], (1 - contr_cell->STATES[TRPN]), contr_cell->STATES[TRPN]);
         chem_cell->computeRates(tcurr,
                     chem_cell->CONSTANTS,
                     chem_cell->RATES,
@@ -349,11 +349,11 @@ int main(int argc, char **argv)
 
           // contraction's solve analytical:
           if (is_cai_scaling == true){
-            printf("cai: %lf\n",chem_cell->STATES[cai]);
+            // printf("cai: %lf\n",chem_cell->STATES[cai]);
             contr_cell->solveEuler(dt, tcurr, (chem_cell->STATES[cai]*1000.));
           }
           else{
-            printf("cai: %lf\n",chem_cell->STATES[cai]);
+            // printf("cai: %lf\n",chem_cell->STATES[cai]);
             contr_cell->solveEuler(dt, tcurr, (chem_cell->STATES[cai]));
             // the states cai from chem might be -nan at 2nd loop
           }

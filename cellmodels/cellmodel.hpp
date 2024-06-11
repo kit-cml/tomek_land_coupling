@@ -31,7 +31,8 @@ public:
   virtual void initConsts(double type){}
   virtual void initConsts (double type, bool is_dutta){}
   virtual void initConsts(double type, double conc, double *hill){}
-  virtual void initConsts (double type, double conc, const double *hill, const double *herg){}
+  // virtual void initConsts (double type, double conc, const double *hill, const double *herg){}
+  virtual void initConsts (double type, double bcl, double conc, double *hill, double *herg){}
   virtual void initConsts(double type, double conc, double *hill, bool is_dutta){}
   virtual void initConsts(double type, double bcl, double conc, double *hill, bool is_dutta){}
   virtual void initConsts(double type, double conc, double *hill, double* boot){}
