@@ -164,7 +164,7 @@ int main(int argc, char **argv)
   // drug initialisation
   drug_t IC50;
   bool is_cai_scaling = true;
-  double conc = 0.0;
+  double conc = 33.0;
   double bcl = 1000.;
 
   // cell object pointer
@@ -280,9 +280,9 @@ int main(int argc, char **argv)
       snprintf(buffer, sizeof(buffer), tension);
       fp_tension = fopen(buffer, "w");
 
-      pace_max = 5;
+      pace_max = 1000;
      
-      tcurr = 0.0;
+      tcurr = 33.0;
       dt = 0.001;
       tmax = pace_max*bcl; // TODO: Use this to display current pace
       printer=0;
@@ -368,7 +368,7 @@ int main(int argc, char **argv)
         // printf("%lf,%lf,%lf\n", tcurr,chem_cell->STATES[cai]*1000,Cai_input[cai_index]);
         if(tcurr >= tmax-bcl){
         printer++;
-          if(printer == 333){
+          if(printer == 2){
               fprintf(fp_vm, "%lf,%lf\n", tcurr, chem_cell->STATES[V]);
               fprintf(fp_conc,"%lf,%lf,%lf\n", tcurr,chem_cell->STATES[nai], chem_cell->STATES[cai] );
               fprintf(fp_timestep, "%lf,%lf\n", tcurr,dt);
