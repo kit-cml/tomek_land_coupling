@@ -193,16 +193,7 @@ int main(int argc, char **argv)
   FILE* fp_tension;
   // FILE* fp_ikr_gates;
  
-  // int idx=0;
-  // double temp_Cai_input[2000],Cai_input[1000];
   
-//   int length = get_cai_data_from_file("./bin/cai_input.csv", temp_Cai_input);
-//   for(int a = 1; a<2000; a = a+2){
-//     Cai_input[idx] = temp_Cai_input[a];
-//     idx++;
-// }
-//   int cai_index;
-
   // printf("Using ORd x Land cell model\n");
   int sample_size;
   char drugname[100] = "testing";
@@ -245,7 +236,8 @@ int main(int argc, char **argv)
   double max_time_step = 1.0;
   double time_point = 25.0;
   double dt_set;
-  int printer,pacer,pace_count;
+  int printer,pacer,pace_count,tracing_pace;
+  tracing_pace = 1; // how mane pace we want to record
 
   //sample loop
   tic();
@@ -298,7 +290,6 @@ int main(int argc, char **argv)
       {
         // cai_index = tcurr;
           // compute ODE at tcurr
-        // printf("%lf * (pow( (%lf / %lf) , %lf) * (%lf) - %lf)\n",contr_cell->CONSTANTS[koff],contr_cell->CONSTANTS[Cai], contr_cell->ALGEBRAIC[ca50], contr_cell->CONSTANTS[TRPN_n], (1 - contr_cell->STATES[TRPN]), contr_cell->STATES[TRPN]);
         chem_cell->computeRates(tcurr,
                     chem_cell->CONSTANTS,
                     chem_cell->RATES,
@@ -314,31 +305,7 @@ int main(int argc, char **argv)
                     contr_cell->ALGEBRAIC,
                     y);
 
-        // dt_set = Ohara_Rudy_2011::set_time_step(tcurr,
-        //            time_point,
-        //            max_time_step,
-        //            chem_cell->CONSTANTS,
-        //            chem_cell->RATES,
-        //            chem_cell->STATES,
-        //            chem_cell->ALGEBRAIC);
-        // // dt_set = dt;
-
-        // // compute accepted timestep
-        // if (floor((tcurr + dt_set) / bcl) == floor(tcurr / bcl)) {
-        //   dt = dt_set;
-        // }
-        // else {
-        //   dt = (floor(tcurr / bcl) + 1) * bcl - tcurr;
-        //   inet = 0.;
-        //   if(floor(tcurr)==floor(bcl*pace_max)) //printf("Qnet final value: %lf\n", qnet/1000.0);
-        //   qnet = 0.;
-        // }
-
-        // if(tcurr==0.0){
-          // chem_cell->solveAnalytical(dt);
-          // contr_cell->solveEuler(dt, tcurr,Cai_input[cai_index]);
-        // }
-        // else{
+        
           // forward euler only
           chem_cell->solveAnalytical(0, 
                     dt, 
@@ -366,7 +333,7 @@ int main(int argc, char **argv)
         }
         // fprintf(fp_vm, "%lf,%lf,%lf,%lf,%lf\n", tcurr, chem_cell->STATES[v], chem_cell->STATES[cai], contr_cell->ALGEBRAIC[land_T], contr_cell->ALGEBRAIC[land_T]*480*0.5652016963361872);
         // printf("%lf,%lf,%lf\n", tcurr,chem_cell->STATES[cai]*1000,Cai_input[cai_index]);
-        if(tcurr >= tmax-bcl){
+        if(tcurr >= tmax-(bcl*tracing_pace){
         printer++;
           if(printer == 2){
               fprintf(fp_vm, "%lf,%lf\n", tcurr, chem_cell->STATES[V]);
