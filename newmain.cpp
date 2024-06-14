@@ -307,7 +307,7 @@ int main(int argc, char **argv)
 
         
           // forward euler only
-          chem_cell->solveAnalytical(0, 
+          chem_cell->solveAnalytical(1, 
                     dt, 
                     chem_cell->CONSTANTS,
                     chem_cell->RATES,
@@ -333,14 +333,20 @@ int main(int argc, char **argv)
         }
         // fprintf(fp_vm, "%lf,%lf,%lf,%lf,%lf\n", tcurr, chem_cell->STATES[v], chem_cell->STATES[cai], contr_cell->ALGEBRAIC[land_T], contr_cell->ALGEBRAIC[land_T]*480*0.5652016963361872);
         // printf("%lf,%lf,%lf\n", tcurr,chem_cell->STATES[cai]*1000,Cai_input[cai_index]);
-        if(tcurr >= tmax-(bcl*tracing_pace){
+        if(tcurr >= tmax-(bcl*tracing_pace)){
         printer++;
-          if(printer == 2){
+          if(printer == 333){
               fprintf(fp_vm, "%lf,%lf\n", tcurr, chem_cell->STATES[V]);
               fprintf(fp_conc,"%lf,%lf,%lf\n", tcurr,chem_cell->STATES[nai], chem_cell->STATES[cai] );
               fprintf(fp_timestep, "%lf,%lf\n", tcurr,dt);
               fprintf(fp_tension, "%lf,%lf\n", tcurr,contr_cell->ALGEBRAIC[land_T]);
-              fprintf(fp_icurr,"%lf,%lf,%lf,%lf,%lf,%lf,%lf\n",tcurr,chem_cell->ALGEBRAIC[INa],chem_cell->ALGEBRAIC[IKr], chem_cell->ALGEBRAIC[IKs], chem_cell->ALGEBRAIC[IKs], chem_cell->ALGEBRAIC[IK1], chem_cell->ALGEBRAIC[Ito], chem_cell->ALGEBRAIC[ICaL]);
+              fprintf(fp_icurr,"%lf,%lf,%lf,%lf,%lf,%lf,%lf\n",tcurr,
+              chem_cell->ALGEBRAIC[INa],
+              chem_cell->ALGEBRAIC[IKr], 
+              chem_cell->ALGEBRAIC[IKs], 
+              chem_cell->ALGEBRAIC[IK1],
+              chem_cell->ALGEBRAIC[Ito], 
+              chem_cell->ALGEBRAIC[ICaL]);
               printer=0;
         }
         

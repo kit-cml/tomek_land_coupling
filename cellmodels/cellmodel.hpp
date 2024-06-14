@@ -32,13 +32,13 @@ public:
   virtual void initConsts (double type, bool is_dutta){}
   virtual void initConsts(double type, double conc, double *hill){}
   // virtual void initConsts (double type, double conc, const double *hill, const double *herg){}
-  virtual void initConsts (double type, double bcl, double conc, double *hill, double *herg){}
   virtual void initConsts(double type, double conc, double *hill, bool is_dutta){}
+  virtual void initConsts (double type, double bcl, double conc, double *hill, double *herg){} // here is what theyre using
   virtual void initConsts(double type, double bcl, double conc, double *hill, bool is_dutta){}
   virtual void initConsts(double type, double conc, double *hill, double* boot){}
   virtual void initConsts( bool is_skinned, bool BETA, double* y){}
   
-  virtual void computeRates() = 0;
+  // virtual void computeRates() = 0;
   virtual void computeRates(double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC){}
   virtual void computeRates(double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double land_trpn){}
   virtual void computeRates(double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *y){}
@@ -47,9 +47,9 @@ public:
                                 double* CONSTANTS, double* RATES,double* STATES, double* ALGEBRAIC) {};
 
   // virtual void solveAnalytical() = 0;
-  virtual void solveAnalytical(double dt) {}
-  virtual void solveAnalytical(double dt, double Ca_TRPN) {}
-  virtual void solveAnalytical( int forward_euler_only, double dt, double *CONSTANTS, double *RATES, double* STATES, double* ALGEBRAIC ) {};
+  // virtual void solveAnalytical(double dt) {}
+  // virtual void solveAnalytical(double dt, double Ca_TRPN) {}
+  virtual void solveAnalytical(int forward_euler_only, double dt, double *CONSTANTS, double *RATES, double* STATES, double* ALGEBRAIC) {};
 
   virtual void solveEuler( double dt, double t, double Cai_input ){}
   virtual void gaussElimination(double *A, double *b, double *x, int N){};

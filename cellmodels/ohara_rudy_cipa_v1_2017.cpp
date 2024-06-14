@@ -820,10 +820,10 @@ CONSTANTS[a4] = (( CONSTANTS[k4p]*CONSTANTS[MgATP])/CONSTANTS[Kmgatp])/(1.00000+
 CONSTANTS[Pnak] = (CONSTANTS[celltype]==1.00000 ?  CONSTANTS[Pnak_b]*0.900000 : CONSTANTS[celltype]==2.00000 ?  CONSTANTS[Pnak_b]*0.700000 : CONSTANTS[Pnak_b]);
 }
 
-void ohara_rudy_cipa_v1_2017::computeRates()
-{
+// void ohara_rudy_cipa_v1_2017::computeRates()
+// {
 
-}
+// }
 
 void ohara_rudy_cipa_v1_2017::computeRates( double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double land_trpn )
 {
@@ -1380,7 +1380,7 @@ double ohara_rudy_cipa_v1_2017::set_time_step(double TIME,
   }
 }
 
-void ohara_rudy_cipa_v1_2017::___applyDrugEffect(double conc, const double *hill)
+void ohara_rudy_cipa_v1_2017::___applyDrugEffect(double conc, double *hill)
 {
 CONSTANTS[GK1] = CONSTANTS[GK1] * ((hill[2] > 10E-14 && hill[3] > 10E-14) ? 1./(1.+pow(conc/hill[2],hill[3])) : 1.);
 CONSTANTS[GKs] = CONSTANTS[GKs] * ((hill[4] > 10E-14 && hill[5] > 10E-14) ? 1./(1.+pow(conc/hill[4],hill[5])) : 1.);
@@ -1390,7 +1390,7 @@ CONSTANTS[Gto] = CONSTANTS[Gto] * ((hill[10] > 10E-14 && hill[11] > 10E-14) ? 1.
 CONSTANTS[PCa] = CONSTANTS[PCa] * ( (hill[0] > 10E-14 && hill[1] > 10E-14) ? 1./(1.+pow(conc/hill[0],hill[1])) : 1.);
 }
 
-void ohara_rudy_cipa_v1_2017::___applyHERGBinding(double conc, const double *herg)
+void ohara_rudy_cipa_v1_2017::___applyHERGBinding(double conc, double *herg)
 {
 if(conc > 10E-14){
 CONSTANTS[Kmax] = herg[0];

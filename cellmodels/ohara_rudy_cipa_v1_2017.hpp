@@ -16,7 +16,7 @@ public:
   // void initConsts(double type, double conc, const double *hill, const double *herg );
   // void initConsts(double type, double bcl, double conc, double *ic50, bool is_dutta );
   void initConsts (double type, double bcl, double conc, double *hill, double *herg);
-  void computeRates();
+  // void computeRates();
   void computeRates( double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double land_trpn );
   void solveAnalytical( int forward_euler_only, double dt, double *CONSTANTS, double *RATES, double* STATES, double* ALGEBRAIC );
   double tryDt( double dt,
@@ -39,8 +39,8 @@ public:
                        double* STATES,
                        double* ALGEBRAIC);
 private:
-  void ___applyDrugEffect(double conc, const double *hill);
-  void ___applyHERGBinding(double conc, const double *herg);
+  void ___applyDrugEffect(double conc, double *hill);
+  void ___applyHERGBinding(double conc, double *herg);
   void ___initConsts(double type, double bcl);
 };
 
