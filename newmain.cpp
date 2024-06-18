@@ -307,7 +307,7 @@ int main(int argc, char **argv)
 
         
           // forward euler only
-          chem_cell->solveAnalytical(1, 
+          chem_cell->solveAnalytical(0, 
                     dt, 
                     chem_cell->CONSTANTS,
                     chem_cell->RATES,
