@@ -272,7 +272,7 @@ int main(int argc, char **argv)
       snprintf(buffer, sizeof(buffer), tension);
       fp_tension = fopen(buffer, "w");
 
-      pace_max = 1000;
+      pace_max = 20;
      
       tcurr = 33.0;
       dt = 0.001;
@@ -335,7 +335,7 @@ int main(int argc, char **argv)
         // printf("%lf,%lf,%lf\n", tcurr,chem_cell->STATES[cai]*1000,Cai_input[cai_index]);
         if(tcurr >= tmax-(bcl*tracing_pace)){
         printer++;
-          if(printer == 333){
+          if(printer == 2){
               fprintf(fp_vm, "%lf,%lf\n", tcurr, chem_cell->STATES[V]);
               fprintf(fp_conc,"%lf,%lf,%lf\n", tcurr,chem_cell->STATES[nai], chem_cell->STATES[cai] );
               fprintf(fp_timestep, "%lf,%lf\n", tcurr,dt);

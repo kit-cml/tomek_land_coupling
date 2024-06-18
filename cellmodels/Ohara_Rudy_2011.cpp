@@ -645,6 +645,8 @@ STATES[ca_trpn] = 0.166;
 void Ohara_Rudy_2011::computeRates( double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double land_trpn )
 {
 ALGEBRAIC[Istim] = (TIME>=CONSTANTS[stim_start] && (TIME - CONSTANTS[stim_start]) - floor((TIME - CONSTANTS[stim_start])/CONSTANTS[BCL])*CONSTANTS[BCL]<=CONSTANTS[duration] ? CONSTANTS[amp] : 0.000000);
+// ALGEBRAIC[Istim] = (TIME>=CONSTANTS[stim_start]&&TIME<=CONSTANTS[stim_end]&&(TIME - CONSTANTS[stim_start]) -  floor((TIME - CONSTANTS[stim_start])/CONSTANTS[BCL])*CONSTANTS[BCL]<=CONSTANTS[duration] ? CONSTANTS[amp] : 0.000000);
+// comparison with 2017's Istim
 ALGEBRAIC[hLss] = 1.00000/(1.00000+exp((STATES[v]+87.6100)/7.48800));
 ALGEBRAIC[hLssp] = 1.00000/(1.00000+exp((STATES[v]+93.8100)/7.48800));
 ALGEBRAIC[mss] = 1.00000/(1.00000+exp(- (STATES[v]+CONSTANTS[mssV1])/CONSTANTS[mssV2]));

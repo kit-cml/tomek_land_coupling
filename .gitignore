@@ -1,4 +1,5 @@
 *.plt
 *.dat
-
+result/*
 bin/orudy_cell_sim
+nohup.out
