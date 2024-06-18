@@ -7,7 +7,8 @@
 #include "Tomek_model.hpp"
 #include <cmath>
 #include <cstdlib>
-#include "../../functions/inputoutput.hpp"
+#include "../enums/enum_Tomek_model.hpp"
+// #include "../../functions/inputoutput.hpp"
 
 /*
  * TIME is time in component environment (millisecond).
