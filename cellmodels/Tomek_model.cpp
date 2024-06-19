@@ -8,6 +8,7 @@
 #include <cmath>
 #include <cstdlib>
 #include "../enums/enum_Tomek_model.hpp"
+#include <iostream>
 // #include "../../functions/inputoutput.hpp"
 
 /*
@@ -733,13 +734,13 @@ void Tomek_model::initConsts(double type)
 void Tomek_model::initConsts(double type, double conc, const double *hill)
 {
 	___initConsts(type);
-	mpi_printf(0,"Celltype: %lf\n", CONSTANTS[celltype]);
+	printf("Celltype: %lf\n", CONSTANTS[celltype]);
 	#ifndef COMPONENT_PATCH
-	mpi_printf(0,"Control %lf %lf %lf %lf %lf\n", CONSTANTS[PCa], CONSTANTS[GK1], CONSTANTS[GKs], CONSTANTS[GNaL], CONSTANTS[GKr]);
+	printf("Control %lf %lf %lf %lf %lf\n", CONSTANTS[PCa], CONSTANTS[GK1], CONSTANTS[GKs], CONSTANTS[GNaL], CONSTANTS[GKr]);
 	#endif
 	___applyDrugEffect(conc, hill);
 	#ifndef COMPONENT_PATCH
-	mpi_printf(0,"After drug %lf %lf %lf %lf %lf\n", CONSTANTS[PCa], CONSTANTS[GK1], CONSTANTS[GKs], CONSTANTS[GNaL], CONSTANTS[GKr]);
+	printf("After drug %lf %lf %lf %lf %lf\n", CONSTANTS[PCa], CONSTANTS[GK1], CONSTANTS[GKs], CONSTANTS[GNaL], CONSTANTS[GKr]);
 	#endif
 }
 

@@ -28,9 +28,9 @@ public:
   virtual ~Cellmodel() {}
 
   virtual void initConsts() = 0;
-  virtual void initConsts(double type){}
+  virtual void initConsts(double type){} // in tomek
   virtual void initConsts (double type, bool is_dutta){}
-  virtual void initConsts(double type, double conc, double *hill){}
+  virtual void initConsts(double type, double conc, double *hill){} //in tomek
   // virtual void initConsts (double type, double conc, const double *hill, const double *herg){}
   virtual void initConsts(double type, double conc, double *hill, bool is_dutta){}
   virtual void initConsts (double type, double bcl, double conc, double *hill, double *herg){} // here is what theyre using
@@ -39,7 +39,7 @@ public:
   virtual void initConsts( bool is_skinned, bool BETA, double* y){}
   
   // virtual void computeRates() = 0;
-  virtual void computeRates(double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC){}
+  virtual void computeRates(double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC){} // in tomek
   virtual void computeRates(double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double land_trpn){}
   virtual void computeRates(double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *y){}
 
@@ -47,7 +47,7 @@ public:
                                 double* CONSTANTS, double* RATES,double* STATES, double* ALGEBRAIC) {};
 
   // virtual void solveAnalytical() = 0;
-  // virtual void solveAnalytical(double dt) {}
+  virtual void solveAnalytical(double dt) {} // created for tomek
   // virtual void solveAnalytical(double dt, double Ca_TRPN) {}
   virtual void solveAnalytical(int forward_euler_only, double dt, double *CONSTANTS, double *RATES, double* STATES, double* ALGEBRAIC) {};
 
