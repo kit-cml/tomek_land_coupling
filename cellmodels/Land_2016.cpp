@@ -12,7 +12,9 @@
 // next: create a file to dump this
 Land_2016::Land_2016()
 {
-
+algebraic_size = 24;
+constants_size = 29;
+states_size = 7;
 
 }
 
