@@ -40,7 +40,7 @@ public:
   
   // virtual void computeRates() = 0;
   virtual void computeRates(double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC){} // in tomek
-  virtual void computeRates(double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double land_trpn){}
+  virtual void computeRates(double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double land_trpn){} // now tomek should use this, for coupling
   virtual void computeRates(double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *y){}
 
   virtual double set_time_step (double TIME, double time_point, double min_time_step, double max_time_step, double min_dV, double max_dV,

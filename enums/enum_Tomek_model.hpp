@@ -438,6 +438,7 @@ enum E_STATES_T{
   xs2 = 40,
   Jrel_np = 41,
   Jrel_p = 42,
+  ca_trpn = 43,
 };
 
 #endif

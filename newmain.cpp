@@ -1,5 +1,5 @@
 #include "cellmodels/ohara_rudy_cipa_v1_2017.hpp"
-#include "cellmodels/Land_2016.hpp"
+#include "cellmodels/Tomek_model.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -205,7 +205,7 @@ int main(int argc, char **argv)
   strcat(ic50_address, ".csv");
   strcat(result_address,drugname);
   sample_size = get_drug_data_from_file(ic50_address,IC50);
-  int herg_size = get_herg_data_from_file ("./herg_data/bepridil.csv",herg_input);
+  // int herg_size = get_herg_data_from_file ("./herg_data/bepridil.csv",herg_input);
   double y[7] = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0};
   int sample_idx;
 
@@ -252,9 +252,9 @@ int main(int argc, char **argv)
       strcpy(vmcheck,filename);strcpy(icurr,filename); strcpy(concent, filename); strcpy(timestep,filename); strcpy(tension,filename);
       strcat(vmcheck, "vmcheck.csv");strcat(icurr, "icurr.csv");strcat(concent, "conc.csv");strcat(timestep, "timestep.csv");strcat(tension, "tension.csv");
       contr_cell = new Land_2016();
-      chem_cell = new ohara_rudy_cipa_v1_2017();
+      chem_cell = new Tomek_model();
       
-      chem_cell->initConsts(0., bcl, conc, IC50[sample_idx].data, herg_input[sample_idx].herg);
+      chem_cell->initConsts(0., conc, IC50[sample_idx].data);
       contr_cell->initConsts(false, false, y);
       printf("Initialised\n");
       snprintf(buffer, sizeof(buffer), vmcheck);
@@ -307,12 +307,14 @@ int main(int argc, char **argv)
 
         
           // forward euler only
-          chem_cell->solveAnalytical(0, 
+          chem_cell->solveAnalytical( // 0, 
                     dt, 
-                    chem_cell->CONSTANTS,
-                    chem_cell->RATES,
-                    chem_cell->STATES,
-                    chem_cell->ALGEBRAIC);
+                    // chem_cell->CONSTANTS,
+                    // chem_cell->RATES,
+                    // chem_cell->STATES,
+                    // chem_cell->ALGEBRAIC
+                    // question, can we use this mode instead of passing all?
+                    );
 
           // contraction's solve analytical:
           if (is_cai_scaling == true){
