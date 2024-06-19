@@ -13,10 +13,10 @@ public:
 	void initConsts (double celltype);
 	void initConsts (double celltype, double conc, double *hill);
 
-	void computeRates( double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC );
+	void computeRates( double TIME, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double land_trpn );
 	
 	void solveAnalytical( double dt );
-	void solveRK4( double tcurr, double dt );
+	// void solveRK4( double tcurr, double dt );
 	double set_time_step(double TIME,double time_point, 
 		double min_time_step, double max_time_step, 
 		double min_dV, double max_dV);

@@ -12,7 +12,7 @@ enum E_CONSTANTS_T{
     wfrac = 7,
     TOT_A = 8,
     ktm_unblock = 9,
-    beta_1 = 10,
+    land_beta_1 = 10,
     beta_0 = 11,
     gamma_idx = 12,
     gamma_wu = 13,

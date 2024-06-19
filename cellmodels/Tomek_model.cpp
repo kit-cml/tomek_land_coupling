@@ -710,7 +710,7 @@ CONSTANTS[a4] = (( CONSTANTS[k4p]*CONSTANTS[MgATP])/CONSTANTS[Kmgatp])/(1.00000+
 CONSTANTS[Pnak] = (CONSTANTS[celltype]==1.00000 ?  CONSTANTS[Pnak_b]*0.900000 : CONSTANTS[celltype]==2.00000 ?  CONSTANTS[Pnak_b]*0.700000 : CONSTANTS[Pnak_b]);
 }
 
-void Tomek_model::___applyDrugEffect(double conc, const double *hill)
+void Tomek_model::___applyDrugEffect(double conc, double *hill)
 {
 CONSTANTS[GK1] = CONSTANTS[GK1] * ((hill[2] > 10E-14 && hill[3] > 10E-14) ? 1./(1.+pow(conc/hill[2],hill[3])) : 1.);
 CONSTANTS[GKr] = CONSTANTS[GKr] * ((hill[12] > 10E-14 && hill[13] > 10E-14) ? 1./(1.+pow(conc/hill[12],hill[13])) : 1.);
@@ -1014,42 +1014,43 @@ RATES[V] = - (ALGEBRAIC[INa]+ALGEBRAIC[INaL]+ALGEBRAIC[Ito]+ALGEBRAIC[ICaL]+ALGE
 // new for coupling
 RATES[ca_trpn] = CONSTANTS[trpnmax] * land_trpn;
 // RATES[cai] =  ALGEBRAIC[Bcai]*((( - ((ALGEBRAIC[ICaL_i]+ALGEBRAIC[IpCa]+ALGEBRAIC[ICab]) -  2.00000*ALGEBRAIC[INaCa_i])*CONSTANTS[Acap])/( 2.00000*CONSTANTS[F]*CONSTANTS[vmyo]) - ( ALGEBRAIC[Jup]*CONSTANTS[vnsr])/CONSTANTS[vmyo])+( ALGEBRAIC[Jdiff]*CONSTANTS[vss])/CONSTANTS[vmyo]);
-RATES[cai] =  ALGEBRAIC[Bcai]*((( - ((ALGEBRAIC[IpCa]+ALGEBRAIC[ICab]) -  2.00000*ALGEBRAIC[INaCa_i])*CONSTANTS[cm]*CONSTANTS[Acap])/( 2.00000*CONSTANTS[F]*CONSTANTS[vmyo]) - ( ALGEBRAIC[Jup]*CONSTANTS[vnsr])/CONSTANTS[vmyo])+( ALGEBRAIC[Jdiff]*CONSTANTS[vss])/CONSTANTS[vmyo] - RATES[ca_trpn]); // modified
+RATES[cai] =  ALGEBRAIC[Bcai]*((( - ((ALGEBRAIC[IpCa]+ALGEBRAIC[ICab]) -  2.00000*ALGEBRAIC[INaCa_i])* /*CONSTANTS[cm]* */CONSTANTS[Acap])/( 2.00000*CONSTANTS[F]*CONSTANTS[vmyo]) - ( ALGEBRAIC[Jup]*CONSTANTS[vnsr])/CONSTANTS[vmyo])+( ALGEBRAIC[Jdiff]*CONSTANTS[vss])/CONSTANTS[vmyo] - RATES[ca_trpn]); // modified -> cm is unknown here
 RATES[cansr] = ALGEBRAIC[Jup] - ( ALGEBRAIC[Jtr]*CONSTANTS[vjsr])/CONSTANTS[vnsr];
 RATES[cajsr] =  ALGEBRAIC[Bcajsr]*(ALGEBRAIC[Jtr] - ALGEBRAIC[Jrel]);
 
 }
 
-void Tomek_model::solveRK4(double TIME, double dt)
-{
-	double k1[43],k23[43];
-	double yk123[43];
-	int idx;
+//// freeze rk4 since unused for now
+// void Tomek_model::solveRK4(double TIME, double dt)
+// {
+// 	double k1[43],k23[43];
+// 	double yk123[43];
+// 	int idx;
 
 
-	// assuming first computeRates() have been executed
-	computeRates( TIME, CONSTANTS, RATES, STATES, ALGEBRAIC );
-	for( idx = 0; idx < states_size; idx++ ) {
-		k1[idx] = RATES[idx];
-		yk123[idx] = STATES[idx] + (k1[idx]*dt*0.5);
-	}
-	computeRates( TIME+(dt*0.5), CONSTANTS, RATES, yk123, ALGEBRAIC );
-	for( idx = 0; idx < states_size; idx++ ) {
-		k23[idx] = RATES[idx];
-		yk123[idx] = STATES[idx] + (k23[idx]*dt*0.5);
-	}
-	computeRates( TIME+(dt*0.5), CONSTANTS, RATES, yk123, ALGEBRAIC );
-  for( idx = 0; idx < states_size; idx++ ) {
-    k23[idx] += RATES[idx];
-    yk123[idx] = STATES[idx] + (k23[idx]*dt);
-  }
-  computeRates( TIME+dt, CONSTANTS, RATES, yk123, ALGEBRAIC );
-	for( idx = 0; idx < states_size; idx++ ) {
-		STATES[idx] += (k1[idx]+(2*k23[idx])+RATES[idx])/6. * dt;
-  }
+// 	// assuming first computeRates() have been executed
+// 	computeRates( TIME, CONSTANTS, RATES, STATES, ALGEBRAIC );
+// 	for( idx = 0; idx < states_size; idx++ ) {
+// 		k1[idx] = RATES[idx];
+// 		yk123[idx] = STATES[idx] + (k1[idx]*dt*0.5);
+// 	}
+// 	computeRates( TIME+(dt*0.5), CONSTANTS, RATES, yk123, ALGEBRAIC );
+// 	for( idx = 0; idx < states_size; idx++ ) {
+// 		k23[idx] = RATES[idx];
+// 		yk123[idx] = STATES[idx] + (k23[idx]*dt*0.5);
+// 	}
+// 	computeRates( TIME+(dt*0.5), CONSTANTS, RATES, yk123, ALGEBRAIC );
+//   for( idx = 0; idx < states_size; idx++ ) {
+//     k23[idx] += RATES[idx];
+//     yk123[idx] = STATES[idx] + (k23[idx]*dt);
+//   }
+//   computeRates( TIME+dt, CONSTANTS, RATES, yk123, ALGEBRAIC );
+// 	for( idx = 0; idx < states_size; idx++ ) {
+// 		STATES[idx] += (k1[idx]+(2*k23[idx])+RATES[idx])/6. * dt;
+//   }
 
 
-}
+// }
 
 void Tomek_model::solveAnalytical(double dt)
 {

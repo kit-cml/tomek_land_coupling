@@ -1,5 +1,5 @@
-#include "cellmodels/ohara_rudy_cipa_v1_2017.hpp"
 #include "cellmodels/Tomek_model.hpp"
+#include "cellmodels/Land_2016.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -308,8 +308,8 @@ int main(int argc, char **argv)
         
           // forward euler only
           chem_cell->solveAnalytical( // 0, 
-                    dt, 
-                    // chem_cell->CONSTANTS,
+                    dt 
+                    // ,chem_cell->CONSTANTS,
                     // chem_cell->RATES,
                     // chem_cell->STATES,
                     // chem_cell->ALGEBRAIC

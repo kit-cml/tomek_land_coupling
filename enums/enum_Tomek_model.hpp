@@ -1,7 +1,7 @@
 #ifndef EN_TOMEK_MODEL_ENDO_HPP
 #define EN_TOMEK_MODEL_ENDO_HPP
 
-enum E_ALGEBRAIC_T{
+enum ALGEBRAIC{
   mss = 0,
   hss = 1,
   mLss = 2,
@@ -227,7 +227,7 @@ enum E_ALGEBRAIC_T{
   Jtr = 222,
 };
 
-enum E_CONSTANTS_T{
+enum CONSTANTS{
   celltype = 0,
   nao = 1,
   cao = 2,
@@ -394,7 +394,7 @@ enum E_CONSTANTS_T{
 };
 
 
-enum E_STATES_T{
+enum STATES{
   V = 0,
   CaMKt = 1,
   cass = 2,

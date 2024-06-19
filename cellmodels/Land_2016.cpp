@@ -65,7 +65,7 @@ if (CONSTANTS[lambda] >= 1.2){
     // CONSTANTS[ktm_unblock] = 1; // before margara
     CONSTANTS[ktm_unblock] = 0.04; // after margara
 
-    CONSTANTS[beta_1] = -2.4;
+    CONSTANTS[land_beta_1] = -2.4;
     CONSTANTS[beta_0] = 2.3;
     CONSTANTS[gamma_idx] = 0.0085;
     CONSTANTS[gamma_wu] = 0.615;
@@ -89,7 +89,7 @@ if (CONSTANTS[lambda] >= 1.2){
     }
     if (BETA == true){
         // // input an array of beta, 
-        // CONSTANTS[beta_1] = beta[1];
+        // CONSTANTS[land_beta_1] = beta[1];
         // CONSTANTS[beta_0] = beta[0];
     }
     
@@ -182,9 +182,9 @@ ALGEBRAIC[xb_wu_gamma] = ALGEBRAIC[gamma_rate_w] * STATES[XW];
 RATES[XS] = ALGEBRAIC[xb_ws] - ALGEBRAIC[xb_su] - ALGEBRAIC[xb_wu_gamma];
 RATES[XW] = ALGEBRAIC[xb_uw] - ALGEBRAIC[xb_wu] - ALGEBRAIC[xb_ws] - ALGEBRAIC[xb_wu_gamma];
 
-// ca50 = ca50 + beta_1*min(0.2,lambda - 1);
+// ca50 = ca50 + land_beta_1*min(0.2,lambda - 1);
 // dydt(3)  = koff * ( (Cai/ca50)^TRPN_n * (1-TRPN) - TRPN);
-ALGEBRAIC[ca50] = ALGEBRAIC[ca50] + CONSTANTS[beta_1] * fmin(0.2, CONSTANTS[lambda] - 1);
+ALGEBRAIC[ca50] = ALGEBRAIC[ca50] + CONSTANTS[land_beta_1] * fmin(0.2, CONSTANTS[lambda] - 1);
 
 RATES[TRPN] = CONSTANTS[koff] * (pow((CONSTANTS[Cai] / ALGEBRAIC[ca50]), CONSTANTS[TRPN_n]) * (1 - STATES[TRPN]) - STATES[TRPN]);
 ////// Cai constants will trigger NaN, followed by states TRPN
